@@ -27,7 +27,7 @@ const projects = [
     subtitle: 'Express, REST API, Docker',
     image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=1200&q=80',
     github: '#',
-    demo: '#'
+    demo: 'https://car-rental-rest-api-production.up.railway.app/api-docs/'
   }
 ]
 
