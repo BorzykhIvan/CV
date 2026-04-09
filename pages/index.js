@@ -108,6 +108,17 @@ export default function Home() {
         </section>
 
         <section className="card mb-8">
+          <h2 className="text-2xl font-semibold mb-3">AI Tools & Workflow</h2>
+          <ul className="space-y-2 text-gray-300 text-sm list-disc list-inside">
+            <li>AI-assisted development using ChatGPT and Google Gemini.</li>
+            <li>Prompt engineering for code generation, debugging, and refactoring.</li>
+            <li>Rapid prototyping of web applications using AI tools.</li>
+            <li>Automating repetitive development tasks.</li>
+            <li>AI-supported API integration and documentation analysis.</li>
+          </ul>
+        </section>
+
+        <section className="card mb-8">
           <h2 className="text-2xl font-semibold mb-4">Work Experience</h2>
           <div className="space-y-6">
             <div>
@@ -152,13 +163,19 @@ export default function Home() {
               <div className="text-gray-400 text-sm mb-1">October, 2021 – February, 2025</div>
               <h3 className="font-semibold text-gray-100">The Opole University of Technology</h3>
               <div className="text-gray-400 text-sm mb-1">Opole, Poland</div>
-              <div className="text-gray-300 text-sm">Bachelor&apos;s Degree</div>
+              <div className="text-gray-300 text-sm">Bachelors Degree, Computer Science</div>
             </div>
             <div>
               <div className="text-gray-400 text-sm mb-1">February, 2025 – Present</div>
               <h3 className="font-semibold text-gray-100">The Opole University of Technology</h3>
               <div className="text-gray-400 text-sm mb-1">Opole, Poland</div>
-              <div className="text-gray-300 text-sm">Master&apos;s Degree</div>
+              <div className="text-gray-300 text-sm">Master&apos;s Degree, Computer Science</div>
+            </div>
+            <div>
+              <div className="text-gray-400 text-sm mb-1">September, 2017 – May, 2021</div>
+              <h3 className="font-semibold text-gray-100">Zespol Szkol Licealno-Technicznych w Kluczborku</h3>
+              <div className="text-gray-400 text-sm mb-1">Kluczbork, Poland</div>
+              <div className="text-gray-300 text-sm">Secondary education, Computer Technology/Computer Systems Technology</div>
             </div>
           </div>
         </section>
