@@ -23,11 +23,14 @@ export default function ProjectsCarousel({ projects = [] }) {
     setActive((index + projects.length) % projects.length)
   }
 
-  const handleMouseDown = e => {
-    // Включаем drag ТОЛЬКО при зажатой ПКМ
-    if (e.button !== 0) return
-    e.preventDefault()
+  const getProjectUrl = project => {
+    if (project.demo && project.demo !== '#') return project.demo
+    if (project.github && project.github !== '#') return project.github
+    return null
+  }
 
+  const handleMouseDown = e => {
+    if (e.button !== 0) return
     dragState.current = {
       isDragging: true,
       startX: e.clientX,
@@ -54,15 +57,23 @@ export default function ProjectsCarousel({ projects = [] }) {
 
   const handleMouseUp = () => {
     dragState.current.isDragging = false
+    setTimeout(() => {
+      dragState.current.hasMoved = false
+    }, 50)
   }
 
   const handleWheel = e => {
-    // Плавный скролл колёсиком для смены карточек
     if (Math.abs(e.deltaY) + Math.abs(e.deltaX) < 5) return
     if (e.deltaY > 0 || e.deltaX > 0) {
       setActive(prev => (prev + 1) % projects.length)
     } else if (e.deltaY < 0 || e.deltaX < 0) {
       setActive(prev => (prev - 1 + projects.length) % projects.length)
+    }
+  }
+
+  const handleCardClick = e => {
+    if (dragState.current.hasMoved) {
+      e.preventDefault()
     }
   }
 
@@ -74,12 +85,14 @@ export default function ProjectsCarousel({ projects = [] }) {
         </div>
         <div className="space-x-2">
           <button
+            type="button"
             onClick={() => goTo(active - 1)}
             className="px-3 py-1 rounded-full border border-gray-600 text-sm hover:bg-gray-700 transition"
           >
             Prev
           </button>
           <button
+            type="button"
             onClick={() => goTo(active + 1)}
             className="px-3 py-1 rounded-full border border-gray-600 text-sm hover:bg-gray-700 transition"
           >
@@ -94,7 +107,6 @@ export default function ProjectsCarousel({ projects = [] }) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseUp}
         onMouseUp={handleMouseUp}
-        onContextMenu={e => e.preventDefault()}
         onWheel={handleWheel}
       >
         <div className="absolute inset-0 flex items-center justify-center perspective-1000">
@@ -107,30 +119,18 @@ export default function ProjectsCarousel({ projects = [] }) {
             const rotateY = direction * Math.min(abs * 10, 24)
             const zIndex = projects.length - abs
             const opacity = abs > 2 ? 0 : 1
+            const isActive = abs === 0
+            const url = getProjectUrl(project)
 
-            return (
-              <button
-                key={index}
-                type="button"
-                onClick={() => {
-                  if (dragState.current.hasMoved) return
-                  window.open(project.demo || project.github, '_blank')
-                }}
-                className="absolute w-64 h-64 rounded-xl overflow-hidden bg-gray-800/80 shadow-xl border border-gray-700/70 hover:border-indigo-400/80 transition-all duration-500"
-                style={{
-                  transform: `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`,
-                  transformOrigin: 'center center',
-                  zIndex,
-                  opacity,
-                  cursor: 'pointer'
-                }}
-              >
+            const cardContent = (
+              <>
                 <div className="h-32 w-full overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                     loading="lazy"
+                    draggable={false}
                   />
                 </div>
                 <div className="p-3 text-left">
@@ -153,7 +153,41 @@ export default function ProjectsCarousel({ projects = [] }) {
                     )}
                   </div>
                 </div>
-              </button>
+              </>
+            )
+
+            const cardClass =
+              'absolute w-64 h-64 rounded-xl overflow-hidden bg-gray-800/80 shadow-xl border border-gray-700/70 hover:border-indigo-400/80 transition-all duration-500 block text-inherit no-underline'
+
+            const cardStyle = {
+              transform: `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`,
+              transformOrigin: 'center center',
+              zIndex,
+              opacity,
+              cursor: url ? 'pointer' : 'default',
+              pointerEvents: isActive ? 'auto' : 'none'
+            }
+
+            if (url) {
+              return (
+                <a
+                  key={index}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleCardClick}
+                  className={cardClass}
+                  style={cardStyle}
+                >
+                  {cardContent}
+                </a>
+              )
+            }
+
+            return (
+              <div key={index} className={cardClass} style={cardStyle}>
+                {cardContent}
+              </div>
             )
           })}
         </div>
@@ -172,4 +206,3 @@ export default function ProjectsCarousel({ projects = [] }) {
     </div>
   )
 }
-
